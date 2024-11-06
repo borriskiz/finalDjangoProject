@@ -1,7 +1,7 @@
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from coindb.models import Coin
+from coindb.models import Coin, Country, Shop
 from coindb.filters import CoinFilterSet  # если ты хочешь использовать фильтрацию
 
 # Список монет
@@ -35,6 +35,12 @@ class CoinCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('coin_detail', kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Можно дополнительно передать данные, если нужно
+        context['countries'] = Country.objects.all()
+        context['shops'] = Shop.objects.all()
+        return context
 # Обновление монеты
 class CoinUpdateView(UpdateView):
     model = Coin

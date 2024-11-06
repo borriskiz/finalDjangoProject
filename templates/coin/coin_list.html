@@ -3,23 +3,31 @@
 {% block title %}Список монет{% endblock %}
 
 {% block content %}
-    <h1>Список монет</h1>
+    <h1 class="mb-4">Список монет</h1>
     
-    <!-- Форма фильтрации -->
-    <form method="get">
-        {{ filter.form.as_p }}
-        <button type="submit" class="btn btn-primary">Применить фильтры</button>
-    </form>
-
-    <ul class="list-group mt-4">
-        {% for coin in coins %}
-            <li class="list-group-item">
-                <h5><a href="{% url 'coin_detail' coin.id %}">{{ coin.name }}</a></h5>
-                <p>{{ coin.country.name }}</p>
-                <span class="badge bg-secondary">{{ coin.price }} $</span>
-            </li>
-        {% empty %}
-            <p>Нет монет для отображения.</p>
-        {% endfor %}
-    </ul>
+    {% if coins %}
+        <div class="row">
+            {% for coin in coins %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if coin.image %}
+                            <img src="{{ coin.image.url }}" class="card-img-top" alt="{{ coin.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="No image available">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ coin.name }}</h5>
+                            <p class="card-text">Страна: {{ coin.country.name }}</p>
+                            <p class="card-text">Год: {{ coin.year }}</p>
+                            <p class="card-text">Цена: {{ coin.price }} ₽</p>
+                            <a href="{% url 'coin_detail' coin.id %}" class="btn btn-primary">Подробнее</a>
+                            <a href="{% url 'coin_delete' coin.id %}" class="btn btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-items">Монеты не найдены</p>
+    {% endif %}
 {% endblock %}

@@ -1,27 +1,62 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
-{% block title %}
-    {% if coin.pk %}
-        Редактирование монеты
-    {% else %}
-        Создание новой монеты
-    {% endif %}
-{% endblock %}
+{% block title %}Добавить монету{% endblock %}
 
 {% block content %}
-    <h1>
-        {% if coin.pk %}
-            Редактирование монеты
-        {% else %}
-            Создание новой монеты
-        {% endif %}
-    </h1>
+    <h1 class="mb-4">Добавить монету</h1>
     
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Сохранить</button>
-    </form>
+        
+        <div class="form-group">
+            <label for="id_name">Название монеты:</label>
+            {{ form.name|add_class:"form-control" }}
+        </div>
 
-    <a href="{% url 'coin_list' %}" class="btn btn-secondary">Отменить</a>
+        <div class="form-group">
+            <label for="id_country">Страна:</label>
+            <input type="text" name="country" class="form-control" value="{{ form.country.value }}">
+            <!-- Выводим список стран ниже -->
+            <select name="country_list" class="form-control">
+                <option value="">Выберите страну</option>
+                {% for country in countries %}
+                    <option value="{{ country.id }}" {% if country.id == form.country.value %}selected{% endif %}>{{ country.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="id_year">Год выпуска:</label>
+            {{ form.year|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_material">Материалы:</label>
+            {{ form.material|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_price">Цена:</label>
+            {{ form.price|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_image">Изображение монеты:</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="id_shop">Магазин:</label>
+            <select name="shop" class="form-control">
+                <option value="">Не привязывать к магазину</option>
+                {% for shop in shops %}
+                    <option value="{{ shop.id }}" {% if shop.id == form.shop.value %}selected{% endif %}>{{ shop.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+        <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Отмена</a>
+    </form>
 {% endblock %}

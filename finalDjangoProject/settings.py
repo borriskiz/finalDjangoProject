@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'bootstrap5',
+    'widget_tweaks',
     'coindb',
 ]
 
