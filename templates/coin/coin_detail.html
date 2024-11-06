@@ -1,31 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Детали монеты{% endblock %}
+{% block title %}
+    Детали монеты: {{ coin.name }}
+{% endblock %}
 
 {% block content %}
-    <h1>{{ coin.name }} ({{ coin.year }})</h1>
-    <p><strong>Страна:</strong> {{ coin.country.name }}</p>
-    <p><strong>Материалы:</strong> 
-        {% for material in coin.material.all %}
-            {{ material.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </p>
-    <p><strong>Цена:</strong> ${{ coin.price }}</p>
+    <h1 class="mb-4">{{ coin.name }}</h1>
 
-    {% if coin.image %}
-        <img src="{{ coin.image.url }}" alt="{{ coin.name }}" style="max-width: 300px;">
-    {% else %}
-        <p>Изображение не доступно.</p>
-    {% endif %}
-
-    <div class="mt-4">
-        <!-- Кнопка для удаления монеты с красивым стилем -->
-        <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger btn-lg" role="button">
-            <i class="bi bi-trash"></i> Удалить монету
-        </a>
-
-        <a href="{% url 'coin_list' %}" class="btn btn-secondary btn-lg ms-3" role="button">
-            <i class="bi bi-arrow-left-circle"></i> Назад
-        </a>
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Страна:</strong> {{ coin.country.name }}</p>
+            <p><strong>Год выпуска:</strong> {{ coin.year }}</p>
+            <p><strong>Материалы:</strong>
+                {% for material in coin.material.all %}
+                    {{ material.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Цена:</strong> {{ coin.price }} ₽</p>
+            <p><strong>Магазин:</strong> 
+                {% if coin.shop %}
+                    {{ coin.shop.name }}
+                {% else %}
+                    Не привязано
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-md-6">
+            {% if coin.image %}
+                <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid" />
+            {% else %}
+                <p>Изображение не доступно</p>
+            {% endif %}
+        </div>
     </div>
+
+    <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
+    <a href="{% url 'coin_edit' coin.pk %}" class="btn btn-primary mt-3">Редактировать</a>
+    <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger mt-3">Удалить</a>
 {% endblock %}

@@ -30,7 +30,7 @@ class CoinDetailView(DetailView):
 class CoinCreateView(CreateView):
     model = Coin
     template_name = 'coin/coin_form.html'
-    fields = ['name', 'year', 'country', 'material', 'price', 'image']  # Укажи поля для формы
+    fields = ['name', 'year', 'country', 'material', 'price', 'image','shop']  # Укажи поля для формы
 
     def get_success_url(self):
         return reverse_lazy('coin_detail', kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
