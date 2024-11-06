@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали монеты{% endblock %}
+
+{% block content %}
+    <h1>{{ coin.name }} ({{ coin.year }})</h1>
+    <p><strong>Страна:</strong> {{ coin.country.name }}</p>
+    <p><strong>Материалы:</strong> 
+        {% for material in coin.material.all %}
+            {{ material.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <p><strong>Цена:</strong> ${{ coin.price }}</p>
+
+    {% if coin.image %}
+        <img src="{{ coin.image.url }}" alt="{{ coin.name }}" style="max-width: 300px;">
+    {% else %}
+        <p>Изображение не доступно.</p>
+    {% endif %}
+
+    <div class="mt-4">
+        <!-- Кнопка для удаления монеты с красивым стилем -->
+        <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger btn-lg" role="button">
+            <i class="bi bi-trash"></i> Удалить монету
+        </a>
+
+        <a href="{% url 'coin_list' %}" class="btn btn-secondary btn-lg ms-3" role="button">
+            <i class="bi bi-arrow-left-circle"></i> Назад
+        </a>
+    </div>
+{% endblock %}

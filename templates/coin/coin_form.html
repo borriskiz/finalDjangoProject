@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if coin.pk %}
+        Редактирование монеты
+    {% else %}
+        Создание новой монеты
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if coin.pk %}
+            Редактирование монеты
+        {% else %}
+            Создание новой монеты
+        {% endif %}
+    </h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+
+    <a href="{% url 'coin_list' %}" class="btn btn-secondary">Отменить</a>
+{% endblock %}

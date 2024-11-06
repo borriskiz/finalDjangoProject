@@ -8,8 +8,8 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(Coin)
 class CoinAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "year", "price")
-    search_fields = ("name", "country__name")
+    list_display = ('name', 'year', 'price', 'country', 'shop')
+    search_fields = ('name', 'country__name', 'shop__name')
     list_filter = ("year", "country")
 
 @admin.register(Collector)

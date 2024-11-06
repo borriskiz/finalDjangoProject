@@ -39,6 +39,7 @@ class Coin(models.Model):
     material = models.ManyToManyField(Material, verbose_name="Coin Material")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Coin Price")
     image = models.ImageField(upload_to="coins/", verbose_name="Coin Image", blank=True, null=True)
+    shop = models.ForeignKey('Shop', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Shop", related_name="coins")
 
     class Meta:
         verbose_name = "Coin"

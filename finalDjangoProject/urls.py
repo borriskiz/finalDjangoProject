@@ -16,9 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from coindb import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
+                  path('', views.CoinListView.as_view(), name='coin_list'),
+
+                  path('coin/<int:pk>/', views.CoinDetailView.as_view(), name='coin_detail'),
+                  path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),
+                  path('coin/<int:pk>/edit/', views.CoinUpdateView.as_view(), name='coin_edit'),
+                  path('coin/<int:pk>/delete/', views.CoinDeleteView.as_view(), name='coin_delete'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
