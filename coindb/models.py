@@ -1,7 +1,17 @@
 from django.db import models
 
 class Country(models.Model):
+    CONTINENT_CHOICES = [
+        ("Africa", "Africa"),
+        ("Asia", "Asia"),
+        ("Europe", "Europe"),
+        ("North America", "North America"),
+        ("South America", "South America"),
+        ("Antarctica", "Antarctica"),
+        ("Australia", "Australia"),
+    ]
     name = models.CharField(max_length=255, verbose_name="Country Name")
+    continent = models.CharField(max_length=20, choices=CONTINENT_CHOICES, verbose_name="Continent")
     code = models.CharField(max_length=10, verbose_name="Country Code", unique=True)
 
     class Meta:
