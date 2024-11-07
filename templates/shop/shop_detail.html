@@ -5,16 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">{{ shop.name }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="mb-4">{{ shop.name }}</h1>
 
-    <div class="row">
-        <div class="col-md-6">
-            <p><strong>Местоположение:</strong> {{ shop.location }}</p>
-            <p><strong>Контактная информация:</strong> {{ shop.contact_info }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Местоположение:</strong> {{ shop.location }}</p>
+                    <p><strong>Контактная информация:</strong> {{ shop.contact_info }}</p>
+                </div>
+            </div>
+
+            <a href="{% url 'shop_list' %}" class="btn btn-secondary mt-3">Назад к списку магазинов</a>
+            <a href="{% url 'shop_update' shop.pk %}" class="btn btn-primary mt-3">Редактировать</a>
+            <a href="{% url 'shop_delete' shop.pk %}" class="btn btn-danger mt-3">Удалить</a>
         </div>
     </div>
-
-    <a href="{% url 'shop_list' %}" class="btn btn-secondary mt-3">Назад к списку магазинов</a>
-    <a href="{% url 'shop_update' shop.pk %}" class="btn btn-primary mt-3">Редактировать</a>
-    <a href="{% url 'shop_delete' shop.pk %}" class="btn btn-danger mt-3">Удалить</a>
 {% endblock %}

@@ -5,39 +5,42 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">{{ coin.name }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="mb-4">{{ coin.name }}</h1>
 
-    <div class="row">
-        <div class="col-md-6">
-            <p><strong>Страна:</strong> {% if coin.country %}
-                {{ coin.country.name }}
-            {% else %}
-                Не указано
-            {% endif %}</p>
-            <p><strong>Год выпуска:</strong> {{ coin.year }}</p>
-            <p><strong>Материалы:</strong>
-                {% for material in coin.material.all %}
-                    {{ material.name }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-            <p><strong>Цена:</strong> {{ coin.price }} ₽</p>
-            <p><strong>Магазин:</strong>
-                {% if coin.shop %}
-                    {{ coin.shop.name }}
-                {% else %}
-                    Не привязано
-                {% endif %}
-            </p>
-        </div>
-        <div class="col-md-6">
-            {% if coin.image %}
-                <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid"/>
-            {% else %}
-                <p>Изображение не доступно</p>
-            {% endif %}
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Страна:</strong> {% if coin.country %}
+                        {{ coin.country.name }}
+                    {% else %}
+                        Не указано
+                    {% endif %}</p>
+                    <p><strong>Год выпуска:</strong> {{ coin.year }}</p>
+                    <p><strong>Материалы:</strong>
+                        {% for material in coin.material.all %}
+                            {{ material.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p><strong>Цена:</strong> {{ coin.price }} ₽</p>
+                    <p><strong>Магазин:</strong>
+                        {% if coin.shop %}
+                            {{ coin.shop.name }}
+                        {% else %}
+                            Не привязано
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    {% if coin.image %}
+                        <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid"/>
+                    {% else %}
+                        <p>Изображение не доступно</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-
     <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
     <a href="{% url 'coin_edit' coin.pk %}" class="btn btn-primary mt-3">Редактировать</a>
     <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger mt-3">Удалить</a>

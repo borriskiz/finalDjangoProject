@@ -5,16 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">{{ country.name }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="mb-4">{{ country.name }}</h1>
 
-    <div class="row">
-        <div class="col-md-6">
-            <p><strong>Континент:</strong> {{ country.get_continent_display }}</p>
-            <p><strong>Код страны:</strong> {{ country.code }}</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Континент:</strong> {{ country.get_continent_display }}</p>
+                    <p><strong>Код страны:</strong> {{ country.code }}</p>
+                </div>
+            </div>
+
+            <a href="{% url 'country_list' %}" class="btn btn-secondary mt-3">Назад к списку стран</a>
+            <a href="{% url 'country_update' country.pk %}" class="btn btn-primary mt-3">Редактировать</a>
+            <a href="{% url 'country_delete' country.pk %}" class="btn btn-danger mt-3">Удалить</a>
         </div>
     </div>
-
-    <a href="{% url 'country_list' %}" class="btn btn-secondary mt-3">Назад к списку стран</a>
-    <a href="{% url 'country_update' country.pk %}" class="btn btn-primary mt-3">Редактировать</a>
-    <a href="{% url 'country_delete' country.pk %}" class="btn btn-danger mt-3">Удалить</a>
 {% endblock %}
