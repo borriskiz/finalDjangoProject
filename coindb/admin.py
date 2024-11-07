@@ -1,11 +1,17 @@
 from django.contrib import admin
-from .models import Coin, Country, Shop, Material
+from .models import Coin, Country, Shop, Material, CoinCollection
 
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "continent")
     search_fields = ("name", "code")
+
+
+@admin.register(CoinCollection)
+class CoinCollectionAdmin(admin.ModelAdmin):
+    list_display = ("user", "coin")
+    search_fields = ()
 
 
 @admin.register(Coin)
