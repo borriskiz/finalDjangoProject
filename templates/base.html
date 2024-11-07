@@ -122,6 +122,23 @@
                         <li class="nav-item">
                             <a href="{% url 'logout' %}" class="btn btn-danger ml-3">Выйти</a>
                         </li>
+                        {% if request.resolver_match.url_name == 'coin_list' %}
+                            <li class="nav-item">
+                                <a href="{% url 'coin_create' %}" class="btn btn-success ml-3">Добавить монету</a>
+                            </li>
+                        {% elif request.resolver_match.url_name == 'country_list' %}
+                            <li class="nav-item">
+                                <a href="{% url 'country_create' %}" class="btn btn-success ml-3">Добавить страну</a>
+                            </li>
+                        {% elif request.resolver_match.url_name == 'shop_list' %}
+                            <li class="nav-item">
+                                <a href="{% url 'shop_create' %}" class="btn btn-success ml-3">Добавить магазин</a>
+                            </li>
+                        {% elif request.resolver_match.url_name == 'material_list' %}
+                            <li class="nav-item">
+                                <a href="{% url 'material_create' %}" class="btn btn-success ml-3">Добавить материал</a>
+                            </li>
+                        {% endif %}
                     {% else %}
                         <div class="auth-buttons">
                             <li class="nav-item">
