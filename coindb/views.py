@@ -11,6 +11,49 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
+
+@login_required
+def toggle_collection(request, coin_id):
+    coin = get_object_or_404(Coin, pk=coin_id)
+
+    coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
+
+    if coin_collection.exists():
+        coin_collection.delete()
+    else:
+        CoinCollection.objects.create(user=request.user, coin=coin)
+
+    return redirect('coin_detail', pk=coin.pk)
+
+
+class SignupView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, 'registration/signup.html', {'form': form})
+
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('coin_list')
+        return render(request, 'registration/signup.html', {'form': form})
+
+
+class LoginView(View):
+    def get(self, request):
+        form = AuthenticationForm()
+        return render(request, 'registration/login.html', {'form': form})
+
+    def post(self, request):
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('coin_list')
+        return render(request, 'registration/login.html', {'form': form})
+
+
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         coins = Coin.objects.filter(coincollection__user=request.user)
@@ -304,48 +347,3 @@ class MaterialDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('material_list')
-
-
-class SignupView(View):
-    def get(self, request):
-        form = UserCreationForm()
-        return render(request, 'registration/signup.html', {'form': form})
-
-    def post(self, request):
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('coin_list')
-        return render(request, 'registration/signup.html', {'form': form})
-
-
-class LoginView(View):
-    def get(self, request):
-        form = AuthenticationForm()
-        return render(request, 'registration/login.html', {'form': form})
-
-    def post(self, request):
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('coin_list')
-        return render(request, 'registration/login.html', {'form': form})
-
-
-@login_required
-def toggle_collection(request, coin_id):
-    coin = get_object_or_404(Coin, pk=coin_id)
-
-    # Проверяем, есть ли монета в коллекции пользователя
-    coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
-
-    if coin_collection.exists():
-        # Если монета уже в коллекции, удаляем её
-        coin_collection.delete()
-    else:
-        # Если монеты нет в коллекции, добавляем её
-        CoinCollection.objects.create(user=request.user, coin=coin)
-
-    return redirect('coin_detail', pk=coin.pk)
