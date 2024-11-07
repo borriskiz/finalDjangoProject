@@ -39,7 +39,7 @@
                         {% if coin.imageReverse %}
                             <img src="{{ coin.imageReverse.url }}" alt="Реверс монеты" class="img-fluid"/>
                         {% endif %}
-                        {% if  not coin.imageObverse and not coin.imageReverse %}
+                        {% if not coin.imageObverse and not coin.imageReverse %}
                             <span class="text-muted">Изображение не доступно</span>
                         {% endif %}
                     </div>
@@ -50,4 +50,10 @@
     <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
     <a href="{% url 'coin_edit' coin.pk %}" class="btn btn-primary mt-3">Редактировать</a>
     <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger mt-3">Удалить</a>
+    
+    <!-- Кнопка для добавления монеты в коллекцию -->
+    <form action="{% url 'add_to_collection' coin.pk %}" method="post" class="mt-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Добавить в коллекцию</button>
+    </form>
 {% endblock %}

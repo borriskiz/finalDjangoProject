@@ -1,10 +1,15 @@
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from coindb.models import Coin, Country, Shop, Material
+from coindb.models import Coin, Country, Shop, Material, CoinCollection
 from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet, MaterialFilterSet
-
-
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+def profile(request):
+    return render(request, 'profile.html')
 class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
@@ -195,6 +200,8 @@ class ShopDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('shop_list')
+
+
 class MaterialListView(ListView):
     model = Material
     template_name = 'material/material_list.html'
@@ -261,3 +268,44 @@ class MaterialDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('material_list')
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('coin_list')  # После регистрации перенаправляем на список монет
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('coin_list')  # После входа перенаправляем на список монет
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+
+@login_required
+def add_to_collection(request, coin_id):
+    coin = get_object_or_404(Coin, pk=coin_id)
+
+    if not CoinCollection.objects.filter(user=request.user, coin=coin).exists():
+        CoinCollection.objects.create(user=request.user, coin=coin)
+
+    return redirect('profile')
+
+@login_required
+def remove_from_collection(request, coin_id):
+    coin = get_object_or_404(Coin, pk=coin_id)
+    if request.user.is_authenticated:
+        CoinCollection.objects.filter(user=request.user, coin=coin).delete()
+    return redirect('coin_list')

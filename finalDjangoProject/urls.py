@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from coindb import views
 from django.conf import settings
@@ -23,6 +24,13 @@ from django.conf.urls.static import static
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', views.CoinListView.as_view(), name='coin_list'),
+                  path('login/', views.login_view, name='login'),
+                  path('signup/', views.signup, name='signup'),
+                  path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+                  path('profile/', views.profile, name='profile'),
+
+                  path('coin/<int:coin_id>/add_to_collection/', views.add_to_collection, name='add_to_collection'),
+                  path('coin/<int:coin_id>/remove/', views.remove_from_collection, name='remove_from_collection'),
 
                   path('coin/<int:pk>/', views.CoinDetailView.as_view(), name='coin_detail'),
                   path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),

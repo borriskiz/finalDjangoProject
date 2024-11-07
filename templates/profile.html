@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать, {{ user.username }}!</h1>
+    <p>Здесь вы можете управлять своей коллекцией монет.</p>
+    <h2>Моя коллекция</h2>
+    <ul>
+        {% for coin in user.coincollection_set.all %}
+            <li>{{ coin.coin.name }}</li>
+        {% empty %}
+            <li>У вас нет монет в коллекции.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

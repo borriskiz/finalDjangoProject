@@ -84,6 +84,17 @@
                         <a class="nav-link" href="{% url 'material_list' %}">Все материалы</a>
                     </li>
                 </ul>
+                
+                {% if user.is_authenticated %}
+                    <!-- Если пользователь авторизован -->
+                    <a href="{% url 'profile' %}" class="btn btn-primary ml-3">Мой профиль</a>
+                    <a href="{% url 'logout' %}" class="btn btn-danger ml-3">Выйти</a>
+                {% else %}
+                    <!-- Если пользователь не авторизован -->
+                    <a href="{% url 'login' %}" class="btn btn-primary ml-3">Войти</a>
+                    <a href="{% url 'signup' %}" class="btn btn-secondary ml-3">Регистрация</a>
+                {% endif %}
+                
                 {% if request.resolver_match.url_name == 'coin_list' %}
                     <a href="{% url 'coin_create' %}" class="btn btn-success ml-3">Добавить монету</a>
                 {% elif request.resolver_match.url_name == 'country_list' %}

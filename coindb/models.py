@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class Country(models.Model):
     CONTINENT_CHOICES = [
@@ -66,3 +66,13 @@ class Shop(models.Model):
 
     def __str__(self):
         return self.name
+
+class CoinCollection(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    coin = models.ForeignKey(Coin, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'coin')  # Чтобы пользователь не мог добавить одну монету несколько раз
+
+    def __str__(self):
+        return f"{self.user.username}'s collection of {self.coin.name}"
