@@ -49,7 +49,8 @@ class CoinDetailView(DetailView):
 class CoinCreateView(CreateView):
     model = Coin
     template_name = 'coin/coin_form.html'
-    fields = ['name', 'year', 'country', 'material', 'price', 'image', 'shop']  # Укажи поля для формы
+    fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse',
+              'shop']  # Укажи поля для формы
 
     def get_success_url(self):
         return reverse_lazy('coin_detail', kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
@@ -66,7 +67,7 @@ class CoinCreateView(CreateView):
 class CoinUpdateView(UpdateView):
     model = Coin
     template_name = 'coin/coin_form.html'
-    fields = ['name', 'year', 'country', 'material', 'price', 'image']  # Поля для обновления
+    fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse',]  # Поля для обновления
     success_url = reverse_lazy('coin_list')  # Перенаправление после успешного обновления
 
 
@@ -116,6 +117,7 @@ class CountryListView(ListView):
         context['filter'] = CountryFilterSet(self.request.GET, queryset=queryset)
 
         return context
+
 
 class CountryDetailView(DetailView):
     model = Country

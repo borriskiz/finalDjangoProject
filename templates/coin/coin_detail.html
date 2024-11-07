@@ -32,11 +32,17 @@
                     </p>
                 </div>
                 <div class="col-md-6">
-                    {% if coin.image %}
-                        <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid"/>
-                    {% else %}
-                        <p>Изображение не доступно</p>
-                    {% endif %}
+                    <div class="col-md-6">
+                        {% if coin.imageObverse %}
+                            <img src="{{ coin.imageObverse.url }}" alt="Аверс монеты" class="img-fluid"/>
+                        {% endif %}
+                        {% if coin.imageReverse %}
+                            <img src="{{ coin.imageReverse.url }}" alt="Реверс монеты" class="img-fluid"/>
+                        {% endif %}
+                        {% if  not coin.imageObverse and not coin.imageReverse %}
+                            <span class="text-muted">Изображение не доступно</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

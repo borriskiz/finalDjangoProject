@@ -74,11 +74,17 @@
                             {% endfor %}
                         </td>
                         <td>
-                            {% if coin.image %}
-                                <img src="{{ coin.image.url }}" alt="{{ coin.name }}" width="50">
-                            {% else %}
+                            {% if coin.imageObverse %}
+                                <img src="{{ coin.imageObverse.url }}" alt="{{ coin.name }}" width="50">
+
+                            {% endif %}
+                            {% if coin.imageReverse %}
+                                <img src="{{ coin.imageReverse.url }}" alt="{{ coin.name }}" width="50">
+                            {% endif %}
+                            {% if  not coin.imageObverse and not coin.imageReverse %}
                                 <span class="text-muted">Нет изображения</span>
                             {% endif %}
+
                         </td>
                     </tr>
                 {% empty %}
@@ -96,6 +102,12 @@
             <a href="?page=1{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">&laquo; Первая</a>
             <a href="?page=
+                    
+                    
+                    
+                    
+                    
+                    
                     {{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Предыдущая</a>
         {% endif %}
@@ -116,9 +128,21 @@
 
         {% if page_obj.has_next %}
             <a href="?page=
+                    
+                    
+                    
+                    
+                    
+                    
                     {{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Следующая</a>
             <a href="?page=
+                    
+                    
+                    
+                    
+                    
+                    
                     {{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Последняя &raquo;</a>
         {% endif %}

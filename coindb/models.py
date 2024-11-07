@@ -38,7 +38,8 @@ class Coin(models.Model):
     year = models.IntegerField(verbose_name="Year of Issue")
     material = models.ManyToManyField(Material, verbose_name="Coin Material")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Coin Price")
-    image = models.ImageField(upload_to="coins/", verbose_name="Coin Image", blank=True, null=True)
+    imageObverse = models.ImageField(upload_to="coins/", verbose_name="Coin Obverse Image", blank=True, null=True)
+    imageReverse = models.ImageField(upload_to="coins/", verbose_name="Coin Reverse Image", blank=True, null=True)
     shop = models.ForeignKey('Shop', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Shop", related_name="coins")
 
     class Meta:
