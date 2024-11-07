@@ -6,31 +6,31 @@ from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet, Mater
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
+from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-@login_required
-def profile(request):
-    coins = Coin.objects.filter(coincollection__user=request.user)
 
-    coin_filter = CoinFilterSet(request.GET, queryset=coins)
-    coins = coin_filter.qs
+class ProfileView(LoginRequiredMixin, View):
+    def get(self, request):
+        coins = Coin.objects.filter(coincollection__user=request.user)
+        coin_filter = CoinFilterSet(request.GET, queryset=coins)
+        coins = coin_filter.qs
 
-    sort_field = request.GET.get('sort', 'name')
-    order = request.GET.get('order', 'asc')
-    if order == 'desc':
-        sort_field = f'-{sort_field}'
-    coins = coins.order_by(sort_field)
+        sort_field = request.GET.get('sort', 'name')
+        order = request.GET.get('order', 'asc')
+        if order == 'desc':
+            sort_field = f'-{sort_field}'
+        coins = coins.order_by(sort_field)
 
-    paginator = Paginator(coins, 10)  # 10 монет на странице
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        paginator = Paginator(coins, 10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    return render(request, 'profile.html', {
-        'page_obj': page_obj,
-        'filter': coin_filter,
-    })
+        return render(request, 'profile.html', {
+            'page_obj': page_obj,
+            'filter': coin_filter,
+        })
 
 
 class CoinListView(ListView):
@@ -76,13 +76,12 @@ class CoinDetailView(LoginRequiredMixin, DetailView):
         coin = self.object
         # Проверяем, авторизован ли пользователь
         if self.request.user.is_authenticated:
-            # Проверка, находится ли монета в коллекции пользователя
             is_in_collection = CoinCollection.objects.filter(user=self.request.user, coin=coin).exists()
             context['is_in_collection'] = is_in_collection
         else:
-            # Если пользователь не авторизован, передаем флаг с False
             context['is_in_collection'] = False
         return context
+
 
 class CoinCreateView(LoginRequiredMixin, CreateView):
     model = Coin
@@ -95,7 +94,6 @@ class CoinCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Можно дополнительно передать данные, если нужно
         context['countries'] = Country.objects.all()
         context['shops'] = Shop.objects.all()
         return context
@@ -286,7 +284,6 @@ class MaterialCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Можно передать дополнительные данные, если нужно
         return context
 
 
@@ -305,60 +302,43 @@ class MaterialDeleteView(LoginRequiredMixin, DeleteView):
         return reverse_lazy('material_list')
 
 
-def signup(request):
-    if request.method == 'POST':
+class SignupView(View):
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, 'registration/signup.html', {'form': form})
+
+    def post(self, request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('coin_list')  # После регистрации перенаправляем на список монет
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/signup.html', {'form': form})
+            return redirect('coin_list')
+        return render(request, 'registration/signup.html', {'form': form})
 
 
-def login_view(request):
-    if request.method == 'POST':
+class LoginView(View):
+    def get(self, request):
+        form = AuthenticationForm()
+        return render(request, 'registration/login.html', {'form': form})
+
+    def post(self, request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('coin_list')  # После входа перенаправляем на список монет
-    else:
-        form = AuthenticationForm()
-    return render(request, 'registration/login.html', {'form': form})
+            return redirect('coin_list')
+        return render(request, 'registration/login.html', {'form': form})
 
 
-@login_required
-def add_to_collection(request, coin_id):
-    coin = get_object_or_404(Coin, pk=coin_id)
+class ToggleCollectionView(LoginRequiredMixin, View):
+    def get(self, request, coin_id):
+        coin = get_object_or_404(Coin, pk=coin_id)
 
-    if not CoinCollection.objects.filter(user=request.user, coin=coin).exists():
-        CoinCollection.objects.create(user=request.user, coin=coin)
+        coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
 
-    return redirect('profile')
+        if coin_collection.exists():
+            coin_collection.delete()
+        else:
+            CoinCollection.objects.create(user=request.user, coin=coin)
 
-
-@login_required
-def remove_from_collection(request, coin_id):
-    coin = get_object_or_404(Coin, pk=coin_id)
-    if request.user.is_authenticated:
-        CoinCollection.objects.filter(user=request.user, coin=coin).delete()
-    return redirect('coin_list')
-
-
-@login_required
-def toggle_collection(request, coin_id):
-    coin = get_object_or_404(Coin, pk=coin_id)
-
-    # Проверяем, есть ли монета в коллекции пользователя
-    coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
-
-    if coin_collection.exists():
-        # Если монета уже в коллекции, удаляем её
-        coin_collection.delete()
-    else:
-        # Если монеты нет в коллекции, добавляем её
-        CoinCollection.objects.create(user=request.user, coin=coin)
-
-    return redirect('coin_detail', pk=coin.pk)
+        return redirect('coin_detail', pk=coin.pk)

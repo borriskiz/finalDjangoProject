@@ -24,14 +24,13 @@ from django.conf.urls.static import static
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('', views.CoinListView.as_view(), name='coin_list'),
-                  path('accounts/login/', views.login_view, name='login'),
-                  path('signup/', views.signup, name='signup'),
+                  path('accounts/login/', views.LoginView.as_view(), name='login'),
+                  path('signup/', views.SignupView.as_view(), name='signup'),
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-                  path('profile/', views.profile, name='profile'),
+                  path('profile/', views.ProfileView.as_view(), name='profile'),
 
-                  path('coin/<int:coin_id>/add_to_collection/', views.add_to_collection, name='add_to_collection'),
-                  path('coin/<int:coin_id>/remove/', views.remove_from_collection, name='remove_from_collection'),
-                  path('coin/toggle_collection/<int:coin_id>/', views.toggle_collection, name='toggle_collection'),
+
+                  path('coin/toggle_collection/<int:coin_id>/', views.ToggleCollectionView.as_view(), name='toggle_collection'),
 
                   path('coin/<int:pk>/', views.CoinDetailView.as_view(), name='coin_detail'),
                   path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),

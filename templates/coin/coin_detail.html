@@ -44,24 +44,26 @@
                         {% endif %}
                     </div>
                 </div>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'toggle_collection' coin.pk %}" method="post" class="mt-3">
+                        {% csrf_token %}
+                        {% if is_in_collection %}
+                            <button type="submit" class="btn btn-warning">Удалить из коллекции</button>
+                        {% else %}
+                            <button type="submit" class="btn btn-success">Добавить в коллекцию</button>
+                        {% endif %}
+                    </form>
+                {% else %}
+                    <p class="text-muted mt-3">Для добавления в коллекцию, пожалуйста, войдите в систему.</p>
+                {% endif %}
+                
             </div>
+        <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
+                <a href="{% url 'coin_edit' coin.pk %}" class="btn btn-primary mt-3">Редактировать</a>
+                <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger mt-3">Удалить</a>
+
         </div>
     </div>
-    <a href="{% url 'coin_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
-    <a href="{% url 'coin_edit' coin.pk %}" class="btn btn-primary mt-3">Редактировать</a>
-    <a href="{% url 'coin_delete' coin.pk %}" class="btn btn-danger mt-3">Удалить</a>
-    
-    {% if user.is_authenticated %}
-        <!-- Кнопка для добавления или удаления монеты из коллекции -->
-        <form action="{% url 'toggle_collection' coin.pk %}" method="post" class="mt-3">
-            {% csrf_token %}
-            {% if is_in_collection %}
-                <button type="submit" class="btn btn-warning">Удалить из коллекции</button>
-            {% else %}
-                <button type="submit" class="btn btn-success">Добавить в коллекцию</button>
-            {% endif %}
-        </form>
-    {% else %}
-        <p class="text-muted mt-3">Для добавления в коллекцию, пожалуйста, войдите в систему.</p>
-    {% endif %}
+
+
 {% endblock %}
