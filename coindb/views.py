@@ -9,21 +9,30 @@ class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
     context_object_name = 'coins'
-    filterset_class = CoinFilterSet
     paginate_by = 10
+    filterset_class = CoinFilterSet
 
     def get_queryset(self):
+        # Получаем фильтрованный queryset
         queryset = super().get_queryset()
 
-        # Применяем фильтр, если есть параметры GET
+        # Применяем фильтр
         coin_filter = CoinFilterSet(self.request.GET, queryset=queryset)
-        return coin_filter.qs
+        queryset = coin_filter.qs
+
+        # Обработка сортировки
+        sort_field = self.request.GET.get('sort', 'name')  # Поле по умолчанию
+        order = self.request.GET.get('order', 'asc')  # Порядок сортировки по умолчанию
+        if order == 'desc':
+            sort_field = f'-{sort_field}'  # Для убывающей сортировки добавляем минус
+
+        # Применяем сортировку
+        return queryset.order_by(sort_field)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = CoinFilterSet(self.request.GET, queryset=self.get_queryset())
         return context
-# Детали монеты
 class CoinDetailView(DetailView):
     model = Coin
     template_name = 'coin/coin_detail.html'

@@ -19,11 +19,9 @@ class CoinFilterSet(django_filters.FilterSet):
         if value:
             criteria = Q()
             for term in value.split():
-                criteria |= Q(name__icontains=term) | Q(country__name__icontains=term) | Q(
-                    material__name__icontains=term)
+                criteria |= Q(name__icontains=term) | Q(country__name__icontains=term) | Q(material__name__icontains=term)
             return queryset.filter(criteria).distinct()
         return queryset
-
 
 class CountryFilterSet(django_filters.FilterSet):
     term = django_filters.CharFilter(method='filter_term', label='Поиск по названию')
