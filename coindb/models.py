@@ -15,6 +15,7 @@ class Country(models.Model):
     continent = models.CharField(max_length=20, choices=CONTINENT_CHOICES, verbose_name="Continent")
     code = models.CharField(max_length=10, verbose_name="Country Code", unique=True)
 
+
     class Meta:
         verbose_name = "Country"
         verbose_name_plural = "Countries"
