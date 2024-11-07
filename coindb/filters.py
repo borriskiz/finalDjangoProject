@@ -61,6 +61,7 @@ class ShopFilterSet(django_filters.FilterSet):
             )
         return queryset
 
+
 class MaterialFilterSet(django_filters.FilterSet):
     price_range = django_filters.RangeFilter(field_name='price', label='Цена от и до')
     term = django_filters.CharFilter(method='filter_term', label='Поиск по названию материала')
