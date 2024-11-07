@@ -31,6 +31,7 @@ urlpatterns = [
 
                   path('coin/<int:coin_id>/add_to_collection/', views.add_to_collection, name='add_to_collection'),
                   path('coin/<int:coin_id>/remove/', views.remove_from_collection, name='remove_from_collection'),
+                  path('coin/toggle_collection/<int:coin_id>/', views.toggle_collection, name='toggle_collection'),
 
                   path('coin/<int:pk>/', views.CoinDetailView.as_view(), name='coin_detail'),
                   path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),

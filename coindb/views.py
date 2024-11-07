@@ -48,6 +48,14 @@ class CoinDetailView(DetailView):
     template_name = 'coin/coin_detail.html'
     context_object_name = 'coin'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        coin = self.get_object()
+        # Проверяем, есть ли монета в коллекции пользователя
+        context['is_in_collection'] = CoinCollection.objects.filter(user=self.request.user, coin=coin).exists()
+        return context
+
+
 
 class CoinCreateView(CreateView):
     model = Coin
@@ -309,3 +317,21 @@ def remove_from_collection(request, coin_id):
     if request.user.is_authenticated:
         CoinCollection.objects.filter(user=request.user, coin=coin).delete()
     return redirect('coin_list')
+
+
+@login_required
+def toggle_collection(request, coin_id):
+    coin = get_object_or_404(Coin, pk=coin_id)
+
+    # Проверяем, есть ли монета в коллекции пользователя
+    coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
+
+    if coin_collection.exists():
+        # Если монета уже в коллекции, удаляем её
+        coin_collection.delete()
+    else:
+        # Если монеты нет в коллекции, добавляем её
+        CoinCollection.objects.create(user=request.user, coin=coin)
+
+    return redirect('coin_detail', pk=coin.pk)
+
