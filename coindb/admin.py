@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Coin, Country, Collector, Shop, Material
+from .models import Coin, Country,  Shop, Material
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
@@ -12,10 +12,7 @@ class CoinAdmin(admin.ModelAdmin):
     search_fields = ('name', 'country__name', 'shop__name')
     list_filter = ("year", "country")
 
-@admin.register(Collector)
-class CollectorAdmin(admin.ModelAdmin):
-    list_display = ("first_name", "last_name", "email")
-    search_fields = ("first_name", "last_name", "email")
+
 
 @admin.register(Shop)
 class ShopAdmin(admin.ModelAdmin):

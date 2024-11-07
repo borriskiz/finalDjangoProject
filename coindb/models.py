@@ -49,19 +49,6 @@ class Coin(models.Model):
     def __str__(self):
         return f"{self.name} ({self.year})"
 
-class Collector(models.Model):
-    first_name = models.CharField(max_length=255, verbose_name="First Name")
-    last_name = models.CharField(max_length=255, verbose_name="Last Name")
-    email = models.EmailField(unique=True, verbose_name="Email")
-    phone = models.CharField(max_length=20, blank=True, verbose_name="Phone Number")
-    coins = models.ManyToManyField(Coin, verbose_name="Collected Coins", blank=True)
-
-    class Meta:
-        verbose_name = "Collector"
-        verbose_name_plural = "Collectors"
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
 
 class Shop(models.Model):
     name = models.CharField(max_length=255, verbose_name="Shop Name")
