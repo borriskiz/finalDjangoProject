@@ -10,29 +10,32 @@ class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
     context_object_name = 'coins'
-    paginate_by = 10
     filterset_class = CoinFilterSet
+    paginate_by = 10
 
     def get_queryset(self):
-        # Получаем фильтрованный queryset
         queryset = super().get_queryset()
-
-        # Применяем фильтр
         coin_filter = CoinFilterSet(self.request.GET, queryset=queryset)
         queryset = coin_filter.qs
 
-        # Обработка сортировки
-        sort_field = self.request.GET.get('sort', 'name')  # Поле по умолчанию
-        order = self.request.GET.get('order', 'asc')  # Порядок сортировки по умолчанию
+        sort_field = self.request.GET.get('sort', 'name')
+        order = self.request.GET.get('order', 'asc')
         if order == 'desc':
-            sort_field = f'-{sort_field}'  # Для убывающей сортировки добавляем минус
+            sort_field = f'-{sort_field}'
 
-        # Применяем сортировку
-        return queryset.order_by(sort_field)
+        queryset = queryset.order_by(sort_field)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = CoinFilterSet(self.request.GET, queryset=self.get_queryset())
+        queryset = self.get_queryset()
+
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['filter'] = CoinFilterSet(self.request.GET, queryset=queryset)
         return context
 
 
@@ -149,27 +152,25 @@ class ShopListView(ListView):
     model = Shop
     template_name = 'shop/shop_list.html'
     context_object_name = 'shops'
-    paginate_by = 10
     filterset_class = ShopFilterSet
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
-        # Применяем фильтр, если есть параметры GET
         shop_filter = ShopFilterSet(self.request.GET, queryset=queryset)
         queryset = shop_filter.qs
-
-        # Сортировка по столбцам
-        sort_field = self.request.GET.get('sort', 'name')  # Поле по умолчанию
-        order = self.request.GET.get('order', 'asc')  # Порядок сортировки по умолчанию
-        if order == 'desc':
-            sort_field = f'-{sort_field}'  # Для убывающей сортировки добавляем минус
-
-        return queryset.order_by(sort_field)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = ShopFilterSet(self.request.GET, queryset=self.get_queryset())
+        queryset = self.get_queryset()
+
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['filter'] = ShopFilterSet(self.request.GET, queryset=queryset)
         return context
 
 
