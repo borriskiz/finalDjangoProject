@@ -16,9 +16,27 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Название</th>
-                <th>Местоположение</th>
-                <th>Контактная информация</th>
+                <th>
+                    <a href="?sort=name{% if request.GET.sort == 'name' and request.GET.order != 'desc' %}&order=desc{% endif %}">
+                        Название {% if request.GET.sort == 'name' %}
+                            {% if request.GET.order == 'desc' %}▼{% else %}▲{% endif %}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?sort=location{% if request.GET.sort == 'location' and request.GET.order != 'desc' %}&order=desc{% endif %}">
+                        Локация {% if request.GET.sort == 'location' %}
+                            {% if request.GET.order == 'desc' %}▼{% else %}▲{% endif %}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?sort=contact_info{% if request.GET.sort == 'contact_info' and request.GET.order != 'desc' %}&order=desc{% endif %}">
+                        Контактная информация {% if request.GET.sort == 'contact_info' %}
+                            {% if request.GET.order == 'desc' %}▼{% else %}▲{% endif %}
+                        {% endif %}
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -39,13 +57,13 @@
     <!-- Пагинация -->
     <div class="mt-4">
         {% if shops.has_previous %}
-            <a href="?page=1" class="btn btn-secondary">Первая</a>
-            <a href="?page={{ shops.previous_page_number }}" class="btn btn-secondary">Предыдущая</a>
+            <a href="?page=1&{{ request.GET.urlencode }}" class="btn btn-secondary">Первая</a>
+            <a href="?page={{ shops.previous_page_number }}&{{ request.GET.urlencode }}" class="btn btn-secondary">Предыдущая</a>
         {% endif %}
         <span>Страница {{ shops.number }} из {{ shops.paginator.num_pages }}</span>
         {% if shops.has_next %}
-            <a href="?page={{ shops.next_page_number }}" class="btn btn-secondary">Следующая</a>
-            <a href="?page={{ shops.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
+            <a href="?page={{ shops.next_page_number }}&{{ request.GET.urlencode }}" class="btn btn-secondary">Следующая</a>
+            <a href="?page={{ shops.paginator.num_pages }}&{{ request.GET.urlencode }}" class="btn btn-secondary">Последняя</a>
         {% endif %}
     </div>
 {% endblock %}

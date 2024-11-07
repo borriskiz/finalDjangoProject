@@ -110,13 +110,23 @@ class ShopListView(ListView):
     model = Shop
     template_name = 'shop/shop_list.html'
     context_object_name = 'shops'
-    filterset_class = ShopFilterSet
     paginate_by = 10
+    filterset_class = ShopFilterSet
 
     def get_queryset(self):
         queryset = super().get_queryset()
+
+        # Применяем фильтр, если есть параметры GET
         shop_filter = ShopFilterSet(self.request.GET, queryset=queryset)
-        return shop_filter.qs
+        queryset = shop_filter.qs
+
+        # Сортировка по столбцам
+        sort_field = self.request.GET.get('sort', 'name')  # Поле по умолчанию
+        order = self.request.GET.get('order', 'asc')  # Порядок сортировки по умолчанию
+        if order == 'desc':
+            sort_field = f'-{sort_field}'  # Для убывающей сортировки добавляем минус
+
+        return queryset.order_by(sort_field)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
