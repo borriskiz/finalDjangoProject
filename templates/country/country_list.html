@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Список стран{% endblock %}
+
+{% block sidebar %}
+    <div class="sidebar-card">
+        <h5>Фильтр стран</h5>
+        <form method="get">
+            {% csrf_token %}
+            {{ filter.form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Поиск</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Континент</th>
+                <th>Код</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for country in countries %}
+                <tr>
+                    <td><a href="{% url 'country_detail' country.id %}">{{ country.name }}</a></td>
+                    <td>{{ country.continent }}</td>
+                    <td>{{ country.code }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">Страны не найдены</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="mt-4">
+        {% if countries.has_previous %}
+            <a href="?page=1" class="btn btn-secondary">Первая</a>
+            <a href="?page={{ countries.previous_page_number }}" class="btn btn-secondary">Предыдущая</a>
+        {% endif %}
+        <span>Страница {{ countries.number }} из {{ countries.paginator.num_pages }}</span>
+        {% if countries.has_next %}
+            <a href="?page={{ countries.next_page_number }}" class="btn btn-secondary">Следующая</a>
+            <a href="?page={{ countries.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
+        {% endif %}
+    </div>
+{% endblock %}

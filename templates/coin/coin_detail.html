@@ -9,7 +9,11 @@
 
     <div class="row">
         <div class="col-md-6">
-            <p><strong>Страна:</strong> {{ coin.country.name }}</p>
+            <p><strong>Страна:</strong> {% if coin.country %}
+                {{ coin.country.name }}
+            {% else %}
+                Не указано
+            {% endif %}</p>
             <p><strong>Год выпуска:</strong> {{ coin.year }}</p>
             <p><strong>Материалы:</strong>
                 {% for material in coin.material.all %}
@@ -17,7 +21,7 @@
                 {% endfor %}
             </p>
             <p><strong>Цена:</strong> {{ coin.price }} ₽</p>
-            <p><strong>Магазин:</strong> 
+            <p><strong>Магазин:</strong>
                 {% if coin.shop %}
                     {{ coin.shop.name }}
                 {% else %}
@@ -27,7 +31,7 @@
         </div>
         <div class="col-md-6">
             {% if coin.image %}
-                <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid" />
+                <img src="{{ coin.image.url }}" alt="Изображение монеты" class="img-fluid"/>
             {% else %}
                 <p>Изображение не доступно</p>
             {% endif %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Редактирование магазина
+    {% else %}
+        Создание нового магазина
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if form.instance.pk %}
+            Редактирование магазина
+        {% else %}
+            Создание нового магазина
+        {% endif %}
+    </h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+    <a href="{% url 'shop_list' %}" class="btn btn-secondary">Отменить</a>
+{% endblock %}

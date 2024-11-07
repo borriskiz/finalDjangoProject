@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Список магазинов{% endblock %}
+
+{% block sidebar %}
+    <div class="sidebar-card">
+        <h5>Фильтр магазинов</h5>
+        <form method="get">
+            {% csrf_token %}
+            {{ filter.form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Поиск</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Местоположение</th>
+                <th>Контактная информация</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shop in shops %}
+                <tr>
+                    <td><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></td>
+                    <td>{{ shop.location }}</td>
+                    <td>{{ shop.contact_info }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">Магазины не найдены</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Пагинация -->
+    <div class="mt-4">
+        {% if shops.has_previous %}
+            <a href="?page=1" class="btn btn-secondary">Первая</a>
+            <a href="?page={{ shops.previous_page_number }}" class="btn btn-secondary">Предыдущая</a>
+        {% endif %}
+        <span>Страница {{ shops.number }} из {{ shops.paginator.num_pages }}</span>
+        {% if shops.has_next %}
+            <a href="?page={{ shops.next_page_number }}" class="btn btn-secondary">Следующая</a>
+            <a href="?page={{ shops.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
+        {% endif %}
+    </div>
+{% endblock %}

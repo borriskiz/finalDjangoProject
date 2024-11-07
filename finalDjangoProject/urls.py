@@ -28,4 +28,15 @@ urlpatterns = [
                   path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),
                   path('coin/<int:pk>/edit/', views.CoinUpdateView.as_view(), name='coin_edit'),
                   path('coin/<int:pk>/delete/', views.CoinDeleteView.as_view(), name='coin_delete'),
+                  path('countries/', views.CountryListView.as_view(), name='country_list'),
+                  path('countries/<int:pk>/', views.CountryDetailView.as_view(), name='country_detail'),
+                  path('countries/create/', views.CountryCreateView.as_view(), name='country_create'),
+                  path('countries/<int:pk>/edit/', views.CountryUpdateView.as_view(), name='country_update'),
+                  path('countries/<int:pk>/delete/', views.CountryDeleteView.as_view(), name='country_delete'),
+
+                  path('shops/', views.ShopListView.as_view(), name='shop_list'),
+                  path('shops/<int:pk>/', views.ShopDetailView.as_view(), name='shop_detail'),
+                  path('shops/create/', views.ShopCreateView.as_view(), name='shop_create'),
+                  path('shops/<int:pk>/edit/', views.ShopUpdateView.as_view(), name='shop_update'),
+                  path('shops/<int:pk>/delete/', views.ShopDeleteView.as_view(), name='shop_delete'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

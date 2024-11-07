@@ -4,7 +4,7 @@
     {% if form.instance.pk %}
         Редактирование страны
     {% else %}
-        Создание новой записи о стране
+        Создание новой страны
     {% endif %}
 {% endblock %}
 
@@ -13,13 +13,13 @@
         {% if form.instance.pk %}
             Редактирование страны
         {% else %}
-            Создание новой записи о стране
+            Создание новой страны
         {% endif %}
     </h1>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-success">Сохранить</button>
     </form>
-    <a href="{% url 'coin_list' %}" class="btn btn-secondary">Отменить</a>
+    <a href="{% url 'country_list' %}" class="btn btn-secondary">Отменить</a>
 {% endblock %}

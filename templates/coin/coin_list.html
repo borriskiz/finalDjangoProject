@@ -17,57 +17,57 @@
     </div>
 {% endblock %}
 {% block content %}
-   
+
     <!-- Таблица монет -->
     <table class="table table-bordered">
         <thead>
-            <tr>
-                <th>Название</th>
-                <th>Страна</th>
-                <th>Год выпуска</th>
-                <th>Цена</th>
-                <th>Материалы</th>
-                <th>Изображение</th>
-            </tr>
+        <tr>
+            <th>Название</th>
+            <th>Страна</th>
+            <th>Год выпуска</th>
+            <th>Цена</th>
+            <th>Материалы</th>
+            <th>Изображение</th>
+        </tr>
         </thead>
         <tbody>
-            {% for coin in coins %}
-                <tr>
-                    <td><a href="{% url 'coin_detail' coin.id %}">{{ coin.name }}</a></td>
-                    <td>{{ coin.country.name }}</td>
-                    <td>{{ coin.year }}</td>
-                    <td>{{ coin.price }}</td>
-                    <td>
-                        {% for material in coin.material.all %}
-                            {{ material.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% if coin.image %}
-                            <img src="{{ coin.image.url }}" alt="{{ coin.name }}" width="50">
-                        {% else %}
-                            <span class="text-muted">Нет изображения</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center">Монеты не найдены</td>
-                </tr>
-            {% endfor %}
+        {% for coin in coins %}
+            <tr>
+                <td><a href="{% url 'coin_detail' coin.id %}">{{ coin.name }}</a></td>
+                <td>{{ coin.country.name }}</td>
+                <td>{{ coin.year }}</td>
+                <td>{{ coin.price }}</td>
+                <td>
+                    {% for material in coin.material.all %}
+                        {{ material.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if coin.image %}
+                        <img src="{{ coin.image.url }}" alt="{{ coin.name }}" width="50">
+                    {% else %}
+                        <span class="text-muted">Нет изображения</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Монеты не найдены</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 
     <!-- Пагинация -->
-    <div class="mt-4">
-        {% if coins.has_previous %}
-            <a href="?page=1" class="btn btn-secondary">Первая</a>
-            <a href="?page={{ coins.previous_page_number }}" class="btn btn-secondary">Предыдущая</a>
-        {% endif %}
-        <span>Страница {{ coins.number }} из {{ coins.paginator.num_pages }}</span>
-        {% if coins.has_next %}
-            <a href="?page={{ coins.next_page_number }}" class="btn btn-secondary">Следующая</a>
-            <a href="?page={{ coins.paginator.num_pages }}" class="btn btn-secondary">Последняя</a>
-        {% endif %}
-    </div>
+<div class="mt-4">
+    {% if coins.has_previous %}
+        <a href="?page=1{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}" class="btn btn-secondary">Первая</a>
+        <a href="?page={{ coins.previous_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}" class="btn btn-secondary">Предыдущая</a>
+    {% endif %}
+    <span>Страница {{ coins.number }} из {{ coins.paginator.num_pages }}</span>
+    {% if coins.has_next %}
+        <a href="?page={{ coins.next_page_number }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}" class="btn btn-secondary">Следующая</a>
+        <a href="?page={{ coins.paginator.num_pages }}{% if request.GET %}&{{ request.GET.urlencode }}{% endif %}" class="btn btn-secondary">Последняя</a>
+    {% endif %}
+</div>
 {% endblock %}

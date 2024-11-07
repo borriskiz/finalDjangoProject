@@ -34,7 +34,7 @@ class Material(models.Model):
 
 class Coin(models.Model):
     name = models.CharField(max_length=255, verbose_name="Coin Name")
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, verbose_name="Country of Origin")
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True,null=True, verbose_name="Country of Origin")
     year = models.IntegerField(verbose_name="Year of Issue")
     material = models.ManyToManyField(Material, verbose_name="Coin Material")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Coin Price")
