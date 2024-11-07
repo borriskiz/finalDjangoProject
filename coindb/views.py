@@ -84,7 +84,7 @@ class CoinDetailView(LoginRequiredMixin, DetailView):
             context['is_in_collection'] = False
         return context
 
-class CoinCreateView(CreateView):
+class CoinCreateView(LoginRequiredMixin, CreateView):
     model = Coin
     template_name = 'coin/coin_form.html'
     fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse',
@@ -101,14 +101,14 @@ class CoinCreateView(CreateView):
         return context
 
 
-class CoinUpdateView(UpdateView):
+class CoinUpdateView(LoginRequiredMixin, UpdateView):
     model = Coin
     template_name = 'coin/coin_form.html'
     fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse', ]
     success_url = reverse_lazy('coin_list')
 
 
-class CoinDeleteView(DeleteView):
+class CoinDeleteView(LoginRequiredMixin, DeleteView):
     model = Coin
     template_name = 'coin/coin_confirm_delete.html'
 
@@ -150,13 +150,13 @@ class CountryListView(ListView):
         return context
 
 
-class CountryDetailView(DetailView):
+class CountryDetailView(LoginRequiredMixin, DetailView):
     model = Country
     template_name = 'country/country_detail.html'
     context_object_name = 'country'
 
 
-class CountryCreateView(CreateView):
+class CountryCreateView(LoginRequiredMixin, CreateView):
     model = Country
     template_name = 'country/country_form.html'
     fields = ['name', 'continent', 'code']
@@ -166,14 +166,14 @@ class CountryCreateView(CreateView):
                             kwargs={'pk': self.object.pk})
 
 
-class CountryUpdateView(UpdateView):
+class CountryUpdateView(LoginRequiredMixin, UpdateView):
     model = Country
     template_name = 'country/country_form.html'
     fields = ['name', 'continent', 'code']
     success_url = reverse_lazy('country_list')
 
 
-class CountryDeleteView(DeleteView):
+class CountryDeleteView(LoginRequiredMixin, DeleteView):
     model = Country
     template_name = 'country/country_confirm_delete.html'
 
@@ -207,13 +207,13 @@ class ShopListView(ListView):
         return context
 
 
-class ShopDetailView(DetailView):
+class ShopDetailView(LoginRequiredMixin, DetailView):
     model = Shop
     template_name = 'shop/shop_detail.html'
     context_object_name = 'shop'
 
 
-class ShopCreateView(CreateView):
+class ShopCreateView(LoginRequiredMixin, CreateView):
     model = Shop
     template_name = 'shop/shop_form.html'
     fields = ['name', 'location', 'contact_info']
@@ -222,14 +222,14 @@ class ShopCreateView(CreateView):
         return reverse_lazy('shop_detail', kwargs={'pk': self.object.pk})
 
 
-class ShopUpdateView(UpdateView):
+class ShopUpdateView(LoginRequiredMixin, UpdateView):
     model = Shop
     template_name = 'shop/shop_form.html'
     fields = ['name', 'location', 'contact_info']
     success_url = reverse_lazy('shop_list')
 
 
-class ShopDeleteView(DeleteView):
+class ShopDeleteView(LoginRequiredMixin, DeleteView):
     model = Shop
     template_name = 'shop/shop_confirm_delete.html'
 
@@ -270,13 +270,13 @@ class MaterialListView(ListView):
         return context
 
 
-class MaterialDetailView(DetailView):
+class MaterialDetailView(LoginRequiredMixin, DetailView):
     model = Material
     template_name = 'material/material_detail.html'
     context_object_name = 'material'
 
 
-class MaterialCreateView(CreateView):
+class MaterialCreateView(LoginRequiredMixin, CreateView):
     model = Material
     template_name = 'material/material_form.html'
     fields = ['name', 'price']
@@ -290,14 +290,14 @@ class MaterialCreateView(CreateView):
         return context
 
 
-class MaterialUpdateView(UpdateView):
+class MaterialUpdateView(LoginRequiredMixin, UpdateView):
     model = Material
     template_name = 'material/material_form.html'
     fields = ['name', 'price']
     success_url = reverse_lazy('material_list')
 
 
-class MaterialDeleteView(DeleteView):
+class MaterialDeleteView(LoginRequiredMixin, DeleteView):
     model = Material
     template_name = 'material/material_confirm_delete.html'
 
