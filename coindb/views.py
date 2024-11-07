@@ -8,18 +8,19 @@ from coindb.filters import CoinFilterSet  # если ты хочешь испо�
 class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
-    context_object_name = 'coins'  # контекст, который будет передан в шаблон
-    filterset_class = CoinFilterSet  # если есть фильтрация
-    paginate_by = 10  # если хочешь пагинацию
+    context_object_name = 'coins'
+    filterset_class = CoinFilterSet
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Пример фильтрации по названию монеты
-        query = self.request.GET.get('q', '')
-        if query:
-            queryset = queryset.filter(name__icontains=query)
-        return queryset
+        self.coin_filter = CoinFilterSet(self.request.GET, queryset=queryset)
+        return self.coin_filter.qs  # Возвращаем отфильтрованный queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.coin_filter  # Передаем фильтр в контекст
+        return context
 # Детали монеты
 class CoinDetailView(DetailView):
     model = Coin
