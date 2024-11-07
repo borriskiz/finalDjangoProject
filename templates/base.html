@@ -70,7 +70,7 @@
                 <img src="/media/logo.png" alt="Монеты" style="height: 70px;">
             </a>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'coin_list' %}">Все монеты</a>
                     </li>
@@ -84,30 +84,51 @@
                         <a class="nav-link" href="{% url 'material_list' %}">Все материалы</a>
                     </li>
                 </ul>
-                
-                {% if user.is_authenticated %}
-                    <!-- Если пользователь авторизован -->
-                    <a href="{% url 'profile' %}" class="btn btn-primary ml-3">Мой профиль</a>
-                    <a href="{% url 'logout' %}" class="btn btn-danger ml-3">Выйти</a>
-                {% else %}
-                    <!-- Если пользователь не авторизован -->
-                    <a href="{% url 'login' %}" class="btn btn-primary ml-3">Войти</a>
-                    <a href="{% url 'signup' %}" class="btn btn-secondary ml-3">Регистрация</a>
-                {% endif %}
-                
-                {% if request.resolver_match.url_name == 'coin_list' %}
-                    <a href="{% url 'coin_create' %}" class="btn btn-success ml-3">Добавить монету</a>
-                {% elif request.resolver_match.url_name == 'country_list' %}
-                    <a href="{% url 'country_create' %}" class="btn btn-success ml-3">Добавить страну</a>
-                {% elif request.resolver_match.url_name == 'shop_list' %}
-                    <a href="{% url 'shop_create' %}" class="btn btn-success ml-3">Добавить магазин</a>
-                {% elif request.resolver_match.url_name == 'material_list' %}
-                    <a href="{% url 'material_create' %}" class="btn btn-success ml-3">Добавить материал</a>
-                {% endif %}
+
+                <ul class="navbar-nav ml-auto d-flex align-items-center">
+                    {% if user.is_authenticated %}
+                        <!-- Если пользователь авторизован -->
+
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="btn btn-primary ml-3"><strong>{{ user.username }}</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'logout' %}" class="btn btn-danger ml-3">Выйти</a>
+                        </li>
+                    {% else %}
+                        <!-- Если пользователь не авторизован -->
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="btn btn-primary ml-3">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'signup' %}" class="btn btn-secondary ml-3">Регистрация</a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.resolver_match.url_name == 'coin_list' %}
+                        <li class="nav-item">
+                            <a href="{% url 'coin_create' %}" class="btn btn-success ml-3">Добавить монету</a>
+                        </li>
+                    {% elif request.resolver_match.url_name == 'country_list' %}
+                        <li class="nav-item">
+                            <a href="{% url 'country_create' %}" class="btn btn-success ml-3">Добавить страну</a>
+                        </li>
+                    {% elif request.resolver_match.url_name == 'shop_list' %}
+                        <li class="nav-item">
+                            <a href="{% url 'shop_create' %}" class="btn btn-success ml-3">Добавить магазин</a>
+                        </li>
+                    {% elif request.resolver_match.url_name == 'material_list' %}
+                        <li class="nav-item">
+                            <a href="{% url 'material_create' %}" class="btn btn-success ml-3">Добавить материал</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </nav>
     </div>
 </header>
+
+
 
 <main class="container mt-4">
     <div class="row">
