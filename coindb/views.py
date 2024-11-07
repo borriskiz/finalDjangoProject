@@ -8,8 +8,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+@login_required
 def profile(request):
-    return render(request, 'profile.html')
+    coins = Coin.objects.filter(coincollection__user=request.user)
+
+    coin_filter = CoinFilterSet(request.GET, queryset=coins)
+    coins = coin_filter.qs
+
+    sort_field = request.GET.get('sort', 'name')
+    order = request.GET.get('order', 'asc')
+    if order == 'desc':
+        sort_field = f'-{sort_field}'
+    coins = coins.order_by(sort_field)
+
+    paginator = Paginator(coins, 10)  # 10 монет на странице
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'profile.html', {
+        'page_obj': page_obj,
+        'filter': coin_filter,
+    })
+
+
 class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
@@ -43,19 +66,23 @@ class CoinListView(ListView):
         return context
 
 
-class CoinDetailView(DetailView):
+class CoinDetailView(LoginRequiredMixin, DetailView):
     model = Coin
     template_name = 'coin/coin_detail.html'
     context_object_name = 'coin'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        coin = self.get_object()
-        # Проверяем, есть ли монета в коллекции пользователя
-        context['is_in_collection'] = CoinCollection.objects.filter(user=self.request.user, coin=coin).exists()
+        coin = self.object
+        # Проверяем, авторизован ли пользователь
+        if self.request.user.is_authenticated:
+            # Проверка, находится ли монета в коллекции пользователя
+            is_in_collection = CoinCollection.objects.filter(user=self.request.user, coin=coin).exists()
+            context['is_in_collection'] = is_in_collection
+        else:
+            # Если пользователь не авторизован, передаем флаг с False
+            context['is_in_collection'] = False
         return context
-
-
 
 class CoinCreateView(CreateView):
     model = Coin
@@ -311,6 +338,7 @@ def add_to_collection(request, coin_id):
 
     return redirect('profile')
 
+
 @login_required
 def remove_from_collection(request, coin_id):
     coin = get_object_or_404(Coin, pk=coin_id)
@@ -334,4 +362,3 @@ def toggle_collection(request, coin_id):
         CoinCollection.objects.create(user=request.user, coin=coin)
 
     return redirect('coin_detail', pk=coin.pk)
-
