@@ -1,8 +1,8 @@
 from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from coindb.models import Coin, Country, Shop
-from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet
+from coindb.models import Coin, Country, Shop, Material
+from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet, MaterialFilterSet
 
 
 class CoinListView(ListView):
@@ -195,3 +195,69 @@ class ShopDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('shop_list')
+class MaterialListView(ListView):
+    model = Material
+    template_name = 'material/material_list.html'
+    context_object_name = 'materials'
+    filterset_class = MaterialFilterSet
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        material_filter = MaterialFilterSet(self.request.GET, queryset=queryset)
+        queryset = material_filter.qs
+
+        sort_field = self.request.GET.get('sort', 'name')
+        order = self.request.GET.get('order', 'asc')
+        if order == 'desc':
+            sort_field = f'-{sort_field}'
+
+        queryset = queryset.order_by(sort_field)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+
+        paginator = Paginator(queryset, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        context['page_obj'] = page_obj
+        context['filter'] = MaterialFilterSet(self.request.GET, queryset=queryset)
+        return context
+
+
+class MaterialDetailView(DetailView):
+    model = Material
+    template_name = 'material/material_detail.html'
+    context_object_name = 'material'
+
+
+class MaterialCreateView(CreateView):
+    model = Material
+    template_name = 'material/material_form.html'
+    fields = ['name', 'price']
+
+    def get_success_url(self):
+        return reverse_lazy('material_detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Можно передать дополнительные данные, если нужно
+        return context
+
+
+class MaterialUpdateView(UpdateView):
+    model = Material
+    template_name = 'material/material_form.html'
+    fields = ['name', 'price']
+    success_url = reverse_lazy('material_list')
+
+
+class MaterialDeleteView(DeleteView):
+    model = Material
+    template_name = 'material/material_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse_lazy('material_list')

@@ -60,3 +60,16 @@ class ShopFilterSet(django_filters.FilterSet):
                 Q(contact_info__icontains=value)
             )
         return queryset
+
+class MaterialFilterSet(django_filters.FilterSet):
+    price_range = django_filters.RangeFilter(field_name='price', label='Цена от и до')
+    term = django_filters.CharFilter(method='filter_term', label='Поиск по названию материала')
+
+    class Meta:
+        model = Material
+        fields = ['term', 'price_range']
+
+    def filter_term(self, queryset, name, value):
+        if value:
+            return queryset.filter(Q(name__icontains=value)).distinct()
+        return queryset

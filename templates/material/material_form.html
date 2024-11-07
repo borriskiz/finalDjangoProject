@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Редактирование материала
+    {% else %}
+        Создание нового материала
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+
+            <h1>
+                {% if form.instance.pk %}
+                    Редактирование материала
+                {% else %}
+                    Создание нового материала
+                {% endif %}
+            </h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Сохранить</button>
+                <a href="{% url 'material_list' %}" class="btn btn-secondary">Отменить</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

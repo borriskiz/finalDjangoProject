@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Список магазинов{% endblock %}
+
+{% block title %}Список материалов{% endblock %}
 
 {% block sidebar %}
     <div class="col-md-12 mb-4">
@@ -8,7 +9,7 @@
                 <form method="get">
                     {% csrf_token %}
                     <h5 class="card-title">Фильтры</h5>
-                    {{ filter.form.as_p }} 
+                    {{ filter.form.as_p }}  <!-- Отображаем форму фильтра -->
                     <button type="submit" class="btn btn-primary">Поиск</button>
                 </form>
             </div>
@@ -30,15 +31,8 @@
                         </a>
                     </th>
                     <th>
-                        <a href="?sort=location{% if request.GET.sort == 'location' and request.GET.order != 'desc' %}&order=desc{% endif %}">
-                            Локация {% if request.GET.sort == 'location' %}
-                            {% if request.GET.order == 'desc' %}▼{% else %}▲{% endif %}
-                        {% endif %}
-                        </a>
-                    </th>
-                    <th>
-                        <a href="?sort=contact_info{% if request.GET.sort == 'contact_info' and request.GET.order != 'desc' %}&order=desc{% endif %}">
-                            Контактная информация {% if request.GET.sort == 'contact_info' %}
+                        <a href="?sort=price{% if request.GET.sort == 'price' and request.GET.order != 'desc' %}&order=desc{% endif %}">
+                            Цена {% if request.GET.sort == 'price' %}
                             {% if request.GET.order == 'desc' %}▼{% else %}▲{% endif %}
                         {% endif %}
                         </a>
@@ -46,15 +40,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for shop in shops %}
+                {% for material in materials %}
                     <tr>
-                        <td><a href="{% url 'shop_detail' shop.id %}">{{ shop.name }}</a></td>
-                        <td>{{ shop.location }}</td>
-                        <td>{{ shop.contact_info }}</td>
+                        <td><a href="{% url 'material_detail' material.id %}">{{ material.name }}</a></td>
+                        <td>{{ material.price }}</td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="3" class="text-center">Магазины не найдены</td>
+                        <td colspan="2" class="text-center">Материалы не найдены</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -65,8 +58,7 @@
         {% if page_obj.has_previous %}
             <a href="?page=1{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">&laquo; Первая</a>
-            <a href="?page=
-                    {{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Предыдущая</a>
         {% endif %}
     
@@ -83,11 +75,9 @@
         <span class="btn btn-primary disabled ml-2">Из {{ page_obj.paginator.num_pages }}</span>
 
         {% if page_obj.has_next %}
-            <a href="?page=
-                    {{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Следующая</a>
-            <a href="?page=
-                    {{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Последняя &raquo;</a>
         {% endif %}
     </div>

@@ -8,34 +8,40 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-image: url("/media/background.png"); 
-            background-size: cover; 
+            background-image: url("/media/background.png");
+            background-size: cover;
             background-repeat: no-repeat;
-            background-position: center; 
+            background-position: center;
         }
+
         header {
             background-color: #343a40;
             color: #fff;
             padding: 10px 0;
         }
+
         header a {
             color: #fff;
             text-decoration: none;
             margin-right: 20px;
         }
+
         header a:hover {
             color: #007bff;
         }
+
         footer {
             background-color: #343a40;
             color: #fff;
             padding: 10px 0;
             text-align: center;
         }
+
         .card-img-top {
             height: 200px;
             object-fit: cover;
         }
+
         .no-items {
             font-size: 1.5em;
             color: #999;
@@ -63,6 +69,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'shop_list' %}">Все магазины</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'material_list' %}">Все материалы</a>
+                    </li>
                 </ul>
                 {% if request.resolver_match.url_name == 'coin_list' %}
                     <a href="{% url 'coin_create' %}" class="btn btn-success ml-3">Добавить монету</a>
@@ -70,6 +79,8 @@
                     <a href="{% url 'country_create' %}" class="btn btn-success ml-3">Добавить страну</a>
                 {% elif request.resolver_match.url_name == 'shop_list' %}
                     <a href="{% url 'shop_create' %}" class="btn btn-success ml-3">Добавить магазин</a>
+                {% elif request.resolver_match.url_name == 'material_list' %}
+                    <a href="{% url 'material_create' %}" class="btn btn-success ml-3">Добавить материал</a>
                 {% endif %}
             </div>
         </nav>

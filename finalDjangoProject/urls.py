@@ -29,6 +29,7 @@ urlpatterns = [
                   path('coin/<int:pk>/edit/', views.CoinUpdateView.as_view(), name='coin_edit'),
                   path('coin/<int:pk>/delete/', views.CoinDeleteView.as_view(), name='coin_delete'),
                   path('countries/', views.CountryListView.as_view(), name='country_list'),
+
                   path('countries/<int:pk>/', views.CountryDetailView.as_view(), name='country_detail'),
                   path('countries/create/', views.CountryCreateView.as_view(), name='country_create'),
                   path('countries/<int:pk>/edit/', views.CountryUpdateView.as_view(), name='country_update'),
@@ -39,4 +40,10 @@ urlpatterns = [
                   path('shops/create/', views.ShopCreateView.as_view(), name='shop_create'),
                   path('shops/<int:pk>/edit/', views.ShopUpdateView.as_view(), name='shop_update'),
                   path('shops/<int:pk>/delete/', views.ShopDeleteView.as_view(), name='shop_delete'),
+
+                  path('material/', views.MaterialListView.as_view(), name='material_list'),
+                  path('material/<int:pk>/', views.MaterialDetailView.as_view(), name='material_detail'),
+                  path('material/create/', views.MaterialCreateView.as_view(), name='material_create'),
+                  path('material/<int:pk>/edit/', views.MaterialUpdateView.as_view(), name='material_update'),
+                  path('material/<int:pk>/delete/', views.MaterialDeleteView.as_view(), name='material_delete'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
