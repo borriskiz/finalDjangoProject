@@ -63,18 +63,27 @@ class CountryListView(ListView):
     model = Country
     template_name = 'country/country_list.html'
     context_object_name = 'countries'
-    filterset_class = CountryFilterSet
     paginate_by = 10
 
     def get_queryset(self):
+        # Применяем фильтр
         queryset = super().get_queryset()
         country_filter = CountryFilterSet(self.request.GET, queryset=queryset)
-        return country_filter.qs
+        queryset = country_filter.qs
+
+        # Применяем сортировку
+        sort = self.request.GET.get('sort', 'name')  # Сортировка по умолчанию "name"
+        order = self.request.GET.get('order', 'asc')  # Направление по умолчанию "asc"
+        if order == 'desc':
+            sort = f'-{sort}'
+        return queryset.order_by(sort)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Передаем в контекст фильтр, чтобы он отображался на странице
         context['filter'] = CountryFilterSet(self.request.GET, queryset=self.get_queryset())
         return context
+
 class CountryDetailView(DetailView):
     model = Country
     template_name = 'country/country_detail.html'
