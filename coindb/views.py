@@ -2,10 +2,9 @@ from django.core.paginator import Paginator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from coindb.models import Coin, Country, Shop
-from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet  # если ты хочешь использовать фильтрацию
+from coindb.filters import CoinFilterSet, ShopFilterSet, CountryFilterSet
 
 
-# Список монет
 class CoinListView(ListView):
     model = Coin
     template_name = 'coin/coin_list.html'
@@ -45,15 +44,14 @@ class CoinDetailView(DetailView):
     context_object_name = 'coin'
 
 
-# Создание новой монеты
 class CoinCreateView(CreateView):
     model = Coin
     template_name = 'coin/coin_form.html'
     fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse',
-              'shop']  # Укажи поля для формы
+              'shop']
 
     def get_success_url(self):
-        return reverse_lazy('coin_detail', kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
+        return reverse_lazy('coin_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,21 +61,19 @@ class CoinCreateView(CreateView):
         return context
 
 
-# Обновление монеты
 class CoinUpdateView(UpdateView):
     model = Coin
     template_name = 'coin/coin_form.html'
-    fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse',]  # Поля для обновления
-    success_url = reverse_lazy('coin_list')  # Перенаправление после успешного обновления
+    fields = ['name', 'year', 'country', 'material', 'price', 'imageObverse', 'imageReverse', ]
+    success_url = reverse_lazy('coin_list')
 
 
-# Удаление монеты
 class CoinDeleteView(DeleteView):
     model = Coin
     template_name = 'coin/coin_confirm_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('coin_list')  # Перенаправление на список монет после удаления
+        return reverse_lazy('coin_list')
 
 
 class CountryListView(ListView):
@@ -89,26 +85,21 @@ class CountryListView(ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        # Применяем фильтр
         country_filter = CountryFilterSet(self.request.GET, queryset=queryset)
         filtered_queryset = country_filter.qs
 
-        # Сортировка
         sort = self.request.GET.get('sort', 'name')
         order = self.request.GET.get('order', 'asc')
         if order == 'desc':
             sort = f'-{sort}'
 
-        # Возвращаем отфильтрованный и отсортированный queryset
         return filtered_queryset.order_by(sort)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Получаем отфильтрованный и отсортированный queryset
         queryset = self.get_queryset()
 
-        # Пагинация
         paginator = Paginator(queryset, self.paginate_by)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -128,18 +119,18 @@ class CountryDetailView(DetailView):
 class CountryCreateView(CreateView):
     model = Country
     template_name = 'country/country_form.html'
-    fields = ['name', 'continent', 'code']  # Указываем поля для формы
+    fields = ['name', 'continent', 'code']
 
     def get_success_url(self):
         return reverse_lazy('country_detail',
-                            kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
+                            kwargs={'pk': self.object.pk})
 
 
 class CountryUpdateView(UpdateView):
     model = Country
     template_name = 'country/country_form.html'
-    fields = ['name', 'continent', 'code']  # Поля для обновления
-    success_url = reverse_lazy('country_list')  # Перенаправление после успешного обновления
+    fields = ['name', 'continent', 'code']
+    success_url = reverse_lazy('country_list')
 
 
 class CountryDeleteView(DeleteView):
@@ -147,7 +138,7 @@ class CountryDeleteView(DeleteView):
     template_name = 'country/country_confirm_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('country_list')  # Перенаправление на список стран после удаления
+        return reverse_lazy('country_list')
 
 
 class ShopListView(ListView):
@@ -185,17 +176,17 @@ class ShopDetailView(DetailView):
 class ShopCreateView(CreateView):
     model = Shop
     template_name = 'shop/shop_form.html'
-    fields = ['name', 'location', 'contact_info']  # Указываем поля для формы
+    fields = ['name', 'location', 'contact_info']
 
     def get_success_url(self):
-        return reverse_lazy('shop_detail', kwargs={'pk': self.object.pk})  # Перенаправление после успешного сохранения
+        return reverse_lazy('shop_detail', kwargs={'pk': self.object.pk})
 
 
 class ShopUpdateView(UpdateView):
     model = Shop
     template_name = 'shop/shop_form.html'
-    fields = ['name', 'location', 'contact_info']  # Поля для обновления
-    success_url = reverse_lazy('shop_list')  # Перенаправление после успешного обновления
+    fields = ['name', 'location', 'contact_info']
+    success_url = reverse_lazy('shop_list')
 
 
 class ShopDeleteView(DeleteView):
@@ -203,4 +194,4 @@ class ShopDeleteView(DeleteView):
     template_name = 'shop/shop_confirm_delete.html'
 
     def get_success_url(self):
-        return reverse_lazy('shop_list')  # Перенаправление на список магазинов после удаления
+        return reverse_lazy('shop_list')

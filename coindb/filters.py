@@ -19,9 +19,11 @@ class CoinFilterSet(django_filters.FilterSet):
         if value:
             criteria = Q()
             for term in value.split():
-                criteria |= Q(name__icontains=term) | Q(country__name__icontains=term) | Q(material__name__icontains=term)
+                criteria |= Q(name__icontains=term) | Q(country__name__icontains=term) | Q(
+                    material__name__icontains=term)
             return queryset.filter(criteria).distinct()
         return queryset
+
 
 class CountryFilterSet(django_filters.FilterSet):
     term = django_filters.CharFilter(method='filter_term', label='Поиск по названию')
@@ -39,13 +41,10 @@ class CountryFilterSet(django_filters.FilterSet):
 
 
 class ShopFilterSet(django_filters.FilterSet):
-    # Поиск по названию, локации и контактной информации
     term = django_filters.CharFilter(method='filter_term', label='Поиск по названию, локации и контакту')
 
-    # Фильтрация по локации
     location = django_filters.CharFilter(field_name='location', lookup_expr='icontains', label='Локация')
 
-    # Фильтрация по контактной информации
     contact_info = django_filters.CharFilter(field_name='contact_info', lookup_expr='icontains',
                                              label='Контактная информация')
 
@@ -54,10 +53,6 @@ class ShopFilterSet(django_filters.FilterSet):
         fields = ['term', 'location', 'contact_info']
 
     def filter_term(self, queryset, name, value):
-        """
-        Фильтрация по поисковому запросу, который может совпадать с названием,
-        локацией или контактной информацией.
-        """
         if value:
             return queryset.filter(
                 Q(name__icontains=value) |

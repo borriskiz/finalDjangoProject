@@ -2,14 +2,13 @@
 {% block title %}Список стран{% endblock %}
 
 {% block sidebar %}
-    <!-- Перемещаем форму фильтрации наверх -->
     <div class="col-md-12 mb-4">
         <div class="card">
             <div class="card-body">
                 <form method="get">
                     {% csrf_token %}
                     <h5 class="card-title">Фильтры</h5>
-                    {{ filter.form.as_p }}  <!-- Отображаем форму фильтра -->
+                    {{ filter.form.as_p }} 
                     <button type="submit" class="btn btn-primary">Поиск</button>
                 </form>
             </div>
@@ -61,7 +60,6 @@
             </table>
         </div>
     </div>
-    <!-- Пагинация -->
     <div class="pagination justify-content-center">
         {% if page_obj.has_previous %}
             <a href="?page=1{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
@@ -78,7 +76,7 @@
                    max="{{ page_obj.paginator.num_pages }}" class="form-control w-auto" style="width: 80px;">
             <button type="submit" class="btn btn-outline-primary ml-2">Перейти</button>
 
-            <!-- Параметры фильтрации и сортировки -->
+
             {% if request.GET.sort %}<input type="hidden" name="sort" value="{{ request.GET.sort }}">{% endif %}
             {% if request.GET.order %}<input type="hidden" name="order" value="{{ request.GET.order }}">{% endif %}
         </form>
