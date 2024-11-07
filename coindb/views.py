@@ -9,11 +9,12 @@ from django.contrib.auth import login
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.decorators import login_required
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         coins = Coin.objects.filter(coincollection__user=request.user)
+
         coin_filter = CoinFilterSet(request.GET, queryset=coins)
         coins = coin_filter.qs
 
@@ -27,9 +28,12 @@ class ProfileView(LoginRequiredMixin, View):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
+        total_price = sum(coin.price for coin in coins if coin.price is not None)
+
         return render(request, 'profile.html', {
             'page_obj': page_obj,
             'filter': coin_filter,
+            'total_price': total_price,
         })
 
 
@@ -330,15 +334,18 @@ class LoginView(View):
         return render(request, 'registration/login.html', {'form': form})
 
 
-class ToggleCollectionView(LoginRequiredMixin, View):
-    def get(self, request, coin_id):
-        coin = get_object_or_404(Coin, pk=coin_id)
+@login_required
+def toggle_collection(request, coin_id):
+    coin = get_object_or_404(Coin, pk=coin_id)
 
-        coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
+    # Проверяем, есть ли монета в коллекции пользователя
+    coin_collection = CoinCollection.objects.filter(user=request.user, coin=coin)
 
-        if coin_collection.exists():
-            coin_collection.delete()
-        else:
-            CoinCollection.objects.create(user=request.user, coin=coin)
+    if coin_collection.exists():
+        # Если монета уже в коллекции, удаляем её
+        coin_collection.delete()
+    else:
+        # Если монеты нет в коллекции, добавляем её
+        CoinCollection.objects.create(user=request.user, coin=coin)
 
-        return redirect('coin_detail', pk=coin.pk)
+    return redirect('coin_detail', pk=coin.pk)

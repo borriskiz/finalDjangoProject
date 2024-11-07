@@ -20,7 +20,9 @@
 {% block content %}
     <div class="card">
         <div class="card-body">
-            <h3>Моя коллекция</h3>  
+            <h3>Моя коллекция</h3>
+
+            <p><strong>Общая цена коллекции:</strong> {{ total_price }} руб.</p>
 
             <table class="table table-bordered">
                 <thead>
@@ -99,7 +101,8 @@
         {% if page_obj.has_previous %}
             <a href="?page=1{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">&laquo; Первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page=
+                    {{ page_obj.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Предыдущая</a>
         {% endif %}
 
@@ -116,9 +119,11 @@
         <span class="btn btn-primary disabled ml-2">Из {{ page_obj.paginator.num_pages }}</span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page=
+                    {{ page_obj.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Следующая</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
+            <a href="?page=
+                    {{ page_obj.paginator.num_pages }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}"
                class="btn btn-outline-primary">Последняя &raquo;</a>
         {% endif %}
     </div>

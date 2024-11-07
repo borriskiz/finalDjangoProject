@@ -29,8 +29,8 @@ urlpatterns = [
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                   path('profile/', views.ProfileView.as_view(), name='profile'),
 
+                  path('coin/toggle_collection/<int:coin_id>/', views.toggle_collection, name='toggle_collection'),
 
-                  path('coin/toggle_collection/<int:coin_id>/', views.ToggleCollectionView.as_view(), name='toggle_collection'),
 
                   path('coin/<int:pk>/', views.CoinDetailView.as_view(), name='coin_detail'),
                   path('coin/new/', views.CoinCreateView.as_view(), name='coin_create'),
